@@ -1,0 +1,92 @@
+{
+  "module_name": "frustration_detection",
+  "version": "1.0",
+  "last_updated": "2025-11-22",
+  "description": "Progressive frustration detection and de-escalation for PRIYA",
+  "source": "PRIYA v2.4 baseline - Lines 355-407",
+  
+  "patterns": {
+    "frustration_triggers": [
+      "too many questions",
+      "this is taking too long",
+      "just stop",
+      "I'm getting frustrated",
+      "can you just",
+      "why do you need",
+      "I already told you",
+      "this is ridiculous",
+      "are you serious",
+      "stop repeating",
+      "you already said that",
+      "are you listening",
+      "this is frustrating",
+      "oh my god",
+      "jesus",
+      "I can't"
+    ],
+    
+    "explicit_stop_requests": [
+      "stop asking",
+      "no more questions",
+      "just stop"
+    ],
+    
+    "already_told_you": [
+      "I already told you",
+      "I said that already",
+      "I just said"
+    ]
+  },
+  
+  "responses": {
+    "first_frustration": "I hear you - let me just get the essentials and I'll have someone from the team give you a call straight away.",
+    "second_frustration": "I completely understand. Let me just grab your name and number and I'll have {{agent_name}} call you back right now.",
+    "explicit_stop": "Of course. Let me just get your name and number and someone will call you straight back.",
+    "already_told_acknowledgment": "You're absolutely right, I apologize. Let me use that information."
+  },
+  
+  "actions": {
+    "first_frustration": {
+      "increment_counter": true,
+      "set_collect_essentials_only": true,
+      "collect_fields": ["name", "phone", "service_type", "urgency"],
+      "route_to": "immediate_callback"
+    },
+    "second_frustration": {
+      "increment_counter": true,
+      "collect_fields": ["name", "phone"],
+      "set_priority_callback": true,
+      "set_frustration_escalation": true,
+      "route_to": "available_agent_direct"
+    },
+    "explicit_stop": {
+      "collect_fields": ["name", "phone"],
+      "set_priority_callback": true,
+      "route_to": "priority_callback_queue"
+    }
+  },
+  
+  "escalation_levels": {
+    "level_0": {
+      "count": 0,
+      "action": "normal_conversation"
+    },
+    "level_1": {
+      "count": 1,
+      "action": "simplify_and_expedite"
+    },
+    "level_2": {
+      "count": 2,
+      "action": "immediate_human_escalation"
+    }
+  },
+  
+  "metadata": {
+    "total_patterns": 19,
+    "trigger_patterns": 16,
+    "explicit_stop_patterns": 3,
+    "extracted_from": "PRIYA v2.4",
+    "extraction_thread": 6,
+    "implementation_priority": 1
+  }
+}

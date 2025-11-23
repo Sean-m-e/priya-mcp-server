@@ -1,0 +1,84 @@
+{
+  "module_name": "interruption_handling",
+  "version": "1.0",
+  "last_updated": "2025-11-22",
+  "description": "4-level interruption handling patterns for PRIYA inbound receptionist",
+  "source": "PRIYA v2.4 baseline - Lines 246-332",
+  
+  "patterns": {
+    "hold_requests": [
+      "hang on",
+      "hold on",
+      "just a sec",
+      "wait a moment",
+      "one second",
+      "give me a minute",
+      "let me grab"
+    ],
+    
+    "basic_interruptions": [
+      "wait",
+      "actually",
+      "no no",
+      "sorry but",
+      "hold up"
+    ],
+    
+    "confusion_interruptions": [
+      "wait, what?",
+      "I don't understand",
+      "what do you mean",
+      "I'm confused",
+      "what are you asking"
+    ],
+    
+    "still_talking": [
+      "I'm still talking",
+      "let me finish",
+      "I wasn't done",
+      "hang on I'm still"
+    ]
+  },
+  
+  "responses": {
+    "hold_acknowledge": "Of course, take your time.",
+    "hold_resume": "Right, so...",
+    "basic_acknowledge": "Yep, go ahead",
+    "basic_return": "So just going back...",
+    "confusion_rephrase": "Sorry, let me be clearer.",
+    "confusion_clarify": "I'm just trying to work out {{simplified_goal}}",
+    "still_talking_acknowledge": "Sorry, go ahead.",
+    "still_talking_resume": "Right, ok so..."
+  },
+  
+  "actions": {
+    "hold_request": {
+      "set_waiting": true,
+      "pause_output": true,
+      "wait_for_resume": true
+    },
+    "basic_interruption": {
+      "stop_speaking": true,
+      "listen_complete": true,
+      "acknowledge": true,
+      "wait_seconds": 0.5
+    },
+    "confusion": {
+      "rephrase_question": true,
+      "simplify": true,
+      "provide_clarification": true
+    },
+    "simplified_mode_trigger": {
+      "interruption_threshold": 3,
+      "action": "set_simplified_mode_true"
+    }
+  },
+  
+  "metadata": {
+    "total_patterns": 21,
+    "extracted_from": "PRIYA v2.4",
+    "extraction_thread": 6,
+    "pattern_types": 4,
+    "implementation_priority": 1
+  }
+}

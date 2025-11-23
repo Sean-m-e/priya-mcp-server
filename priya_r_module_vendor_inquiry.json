@@ -1,0 +1,67 @@
+{
+  "module_name": "R-MODULE: VENDOR_INQUIRY",
+  "version": "1.0",
+  "last_updated": "2025-11-22",
+  "source": "PRIYA v3.9 - Lines 3340-3528",
+  "extraction_date": "2025-11-22",
+  "line_count": 189,
+  "description": "Complete conversation flow for handling existing sellers calling about their listed properties",
+  
+  "module_metadata": {
+    "caller_type": "vendor",
+    "trigger_condition": "caller_type = 'vendor'",
+    "variables_used": [
+      "vendor_property_address",
+      "vendor_inquiry_type",
+      "vendor_inquiry_details",
+      "vendor_agent_requested",
+      "vendor_urgency",
+      "vendor_price_discussion",
+      "vendor_marketing_concern",
+      "vendor_contract_question",
+      "caller_first_name",
+      "caller_phone",
+      "caller_email",
+      "person_requested"
+    ],
+    "conversation_steps": 7,
+    "critical_features": [
+      "State-first checking",
+      "Dual flag system",
+      "Urgency assessment",
+      "Contact confirmation",
+      "Agent routing"
+    ]
+  },
+  
+  "content": "R-MODULE: VENDOR_INQUIRY\n\nPURPOSE:\nHandle existing sellers calling about their listed properties.\n\nTRIGGERS:\ncaller_type = \"vendor\"\n\nOPENING STATEMENT:\n[Already delivered in Team Availability Statement]\nBased on caller_first_name:\n- \"Hi [caller_first_name], I can certainly help you with that.\"\n- \"I can certainly help you with that. Sorry, who am I speaking with?\"\n\nINFORMATION COLLECTION (STATE-FIRST CHECKING):\n\n1. Property Address (Which Listing?)\n\n[STATE CHECK: vendor_property_address]\nIF vendor_property_address_collected = true AND vendor_property_address_confirmed = true:\n    LOG(\"Vendor property address already collected - skipping question\")\n    you are to say: \"So you're calling about [vendor_property_address]?\"\n    WAIT for confirmation\n    [SKIP to Inquiry Type]\nELSE:\n    you are to say: \"Can I just grab the property address?\"\n    WAIT for response\n    EXTRACT vendor_property_address from response\n    SET vendor_property_address_collected = true\n    SET vendor_property_address_confirmed = true\nENDIF\n\n2. Inquiry Type (What's This About?)\n\n[STATE CHECK: vendor_inquiry_type]\nIF vendor_inquiry_type_collected = true AND vendor_inquiry_type_confirmed = true:\n    LOG(\"Inquiry type already collected - skipping question\")\n    [SKIP to Inquiry Details]\nELSE:\n    # Analyze what they've said so far - often mentioned in opening\n    IF vendor_price_discussion = true:\n        SET vendor_inquiry_type = \"price_change\"\n        SET vendor_inquiry_type_collected = true\n        you are to say: \"So you'd like to discuss the pricing?\"\n        WAIT for confirmation\n        SET vendor_inquiry_type_confirmed = true\n    ELSE IF vendor_marketing_concern = true:\n        SET vendor_inquiry_type = \"marketing\"\n        SET vendor_inquiry_type_collected = true\n        you are to say: \"So you have a question about the marketing?\"\n        WAIT for confirmation\n        SET vendor_inquiry_type_confirmed = true\n    ELSE IF vendor_contract_question = true:\n        SET vendor_inquiry_type = \"contract\"\n        SET vendor_inquiry_type_collected = true\n        you are to say: \"So you have a question about the contract?\"\n        WAIT for confirmation\n        SET vendor_inquiry_type_confirmed = true\n    ELSE:\n        you are to say: \"And what can I help you with regarding the property?\"\n        WAIT for response\n        EXTRACT vendor_inquiry_type from response\n        ANALYZE response for:\n            - \"price\", \"reduce\", \"increase\" -> vendor_inquiry_type = \"price_change\"\n            - \"marketing\", \"photos\", \"signage\", \"advertising\" -> vendor_inquiry_type = \"marketing\"\n            - \"feedback\", \"buyers\", \"interest\" -> vendor_inquiry_type = \"feedback\"\n            - \"contract\", \"offer\", \"settlement\" -> vendor_inquiry_type = \"contract\"\n            - \"cancel\", \"withdraw\" -> vendor_inquiry_type = \"cancel_listing\"\n            - Other -> vendor_inquiry_type = \"other\"\n        SET vendor_inquiry_type_collected = true\n        SET vendor_inquiry_type_confirmed = true\n    ENDIF\nENDIF\n\n3. Inquiry Details (Specific Information)\n\n[STATE CHECK: vendor_inquiry_details]\nIF vendor_inquiry_details_collected = true AND vendor_inquiry_details_confirmed = true:\n    LOG(\"Inquiry details already collected - skipping\")\n    [SKIP to Agent Request Check]\nELSE:\n    # Often already mentioned - extract from conversation\n    IF vendor_inquiry_details contains text:\n        LOG(\"Details already captured from conversation\")\n        SET vendor_inquiry_details_collected = true\n        SET vendor_inquiry_details_confirmed = true\n    ELSE:\n        you are to say: \"Can you tell me a bit more about that?\"\n        WAIT for response\n        EXTRACT vendor_inquiry_details from response\n        SET vendor_inquiry_details_collected = true\n        SET vendor_inquiry_details_confirmed = true\n    ENDIF\nENDIF\n\n4. Specific Agent Requested?\n\n[STATE CHECK: vendor_agent_requested]\nIF vendor_agent_requested_collected = true AND vendor_agent_requested_confirmed = true:\n    LOG(\"Agent request already collected - skipping\")\n    [SKIP to Urgency]\nELSE:\n    # Check if they mentioned specific agent\n    IF person_requested = [Khushi/Misal]:\n        SET vendor_agent_requested = person_requested\n        SET vendor_agent_requested_collected = true\n        SET vendor_agent_requested_confirmed = true\n    ELSE:\n        you are to say: \"Would you like me to have your listing agent call you back, or is this something I can help with?\"\n        WAIT for response\n        IF response contains \"agent\" OR \"call back\" OR agent name:\n            EXTRACT vendor_agent_requested from response\n            SET vendor_agent_requested_collected = true\n            SET vendor_agent_requested_confirmed = true\n        ELSE:\n            SET vendor_agent_requested = \"\"\n            SET vendor_agent_requested_collected = true\n            SET vendor_agent_requested_confirmed = true\n        ENDIF\n    ENDIF\nENDIF\n\n5. Urgency Assessment\n\n[STATE CHECK: vendor_urgency]\nIF vendor_urgency_collected = true AND vendor_urgency_confirmed = true:\n    LOG(\"Urgency already assessed\")\n    [SKIP to Confirmation]\nELSE:\n    # Analyze conversation for urgency indicators\n    IF response contains ANY of [\"urgent\", \"ASAP\", \"immediately\", \"today\", \"now\"]:\n        SET vendor_urgency = \"urgent\"\n    ELSE IF response contains ANY of [\"emergency\", \"critical\"]:\n        SET vendor_urgency = \"emergency\"\n    ELSE:\n        SET vendor_urgency = \"standard\"\n    ENDIF\n    SET vendor_urgency_collected = true\n    SET vendor_urgency_confirmed = true\nENDIF\n\nCONFIRMATION:\n\nyou are to say: \"Perfect. So just to confirm - you're calling about [vendor_property_address], regarding [vendor_inquiry_type]. [If vendor_agent_requested: I'll have [agent_name] call you back. / I'll make sure the right team member gets this message and calls you back.] Can I just confirm your contact details?\"\n\nContact Details Collection:\n\n[STATE CHECK: caller_phone]\nIF caller_phone_collected = true AND caller_phone_confirmed = true:\n    you are to say: \"So that's [caller_phone] - is that correct?\"\n    WAIT for confirmation\nELSE:\n    you are to say: \"What's the best number to reach you on?\"\n    WAIT for response\n    EXTRACT caller_phone from response\n    SET caller_phone_collected = true\n    you are to say: \"Perfect, so that's [caller_phone] - is that right?\"\n    WAIT for confirmation\n    SET caller_phone_confirmed = true\nENDIF\n\n[STATE CHECK: caller_email]\nIF caller_email_collected = true AND caller_email_confirmed = true:\n    LOG(\"Email already collected and confirmed\")\nELSE:\n    you are to say: \"And can I grab your email address as well?\"\n    WAIT for response\n    EXTRACT caller_email from response\n    SET caller_email_collected = true\n    SET caller_email_confirmed = true\nENDIF\n\nROUTING:\n\nIF vendor_urgency = \"emergency\":\n    you are to say: \"I've marked this as urgent. [If vendor_agent_requested: [Agent_name] / The team] will call you back within the hour.\"\nELSE IF vendor_urgency = \"urgent\":\n    you are to say: \"[If vendor_agent_requested: [Agent_name] / The appropriate team member] will give you a call back this afternoon.\"\nELSE:\n    you are to say: \"[If vendor_agent_requested: [Agent_name] / The team] will give you a call back shortly.\"\nENDIF\n\nCLOSING:\n\nyou are to say: \"Thanks so much for calling [caller_first_name]. [If vendor_urgency = emergency/urgent: We'll get back to you very soon. / Talk to you soon.] Bye!\"\n\nSET goodbye_delivered = true\n\nEND R-MODULE: VENDOR_INQUIRY",
+  
+  "usage_instructions": {
+    "trigger": "Execute when caller_type = 'vendor'",
+    "prerequisites": [
+      "Team availability statement already delivered",
+      "caller_type variable set to 'vendor'",
+      "Vendor detection patterns matched"
+    ],
+    "execution_flow": [
+      "Opening statement (name-aware)",
+      "Property address collection (state-first)",
+      "Inquiry type identification (with flag analysis)",
+      "Inquiry details gathering",
+      "Agent request handling",
+      "Urgency assessment (automatic from conversation)",
+      "Contact details confirmation",
+      "Routing message (urgency-aware)",
+      "Closing statement (urgency-aware)"
+    ],
+    "state_management": "All steps use state-first checking - skip if _collected AND _confirmed both true",
+    "dual_flag_compliance": "100% - all variables have _collected and _confirmed flags"
+  },
+  
+  "integration_notes": {
+    "load_method": "LOAD vendor_inquiry_module FROM MCP: priya_r_module_vendor_inquiry.json",
+    "execute_method": "EXECUTE: vendor_inquiry_module.content",
+    "v4_baseline_reference": "Lines 2323-2327 in PRIYA_WORKING_v4_0_MCP.txt",
+    "replaces": "Placeholder at line 2324: EXECUTE: MCP.secondary_call_types.VENDOR_INQUIRY"
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "module_name": "R-MODULE: TRADESPERSON_INQUIRY",
+  "version": "1.0",
+  "last_updated": "2025-11-22",
+  "source": "PRIYA v3.9 - Lines 4045-4252",
+  "extraction_date": "2025-11-22",
+  "line_count": 208,
+  "description": "Complete conversation flow for handling contractors calling about jobs, quotes, payment, access, or materials",
+  
+  "module_metadata": {
+    "caller_type": "tradesperson",
+    "trigger_condition": "caller_type = 'tradesperson'",
+    "variables_used": [
+      "trade_company_name",
+      "trade_contact_name",
+      "trade_property_address",
+      "trade_job_reference",
+      "trade_inquiry_type",
+      "trade_inquiry_details",
+      "trade_quote_request",
+      "trade_payment_query",
+      "trade_access_issue",
+      "trade_materials_delay",
+      "trade_completion_update",
+      "caller_first_name",
+      "caller_last_name",
+      "caller_phone"
+    ],
+    "conversation_steps": 8,
+    "critical_features": [
+      "State-first checking",
+      "Dual flag system",
+      "Company name extraction from introduction",
+      "Job reference collection",
+      "Type-specific inquiry routing",
+      "Payment vs access vs other routing logic"
+    ]
+  },
+  
+  "content": "R-MODULE: TRADESPERSON_INQUIRY\n\nPURPOSE:\nHandle contractors calling about jobs, quotes, payment, access, or materials.\n\nTRIGGERS:\ncaller_type = \"tradesperson\"\n\nOPENING STATEMENT:\n[Already delivered in Team Availability Statement]\nBased on caller_first_name:\n- \"Hi [caller_first_name], I can help you with that.\"\n- \"I can help you with that. Who am I speaking with?\"\n\nINFORMATION COLLECTION (STATE-FIRST CHECKING):\n\n1. Company Name\n\n[STATE CHECK: trade_company_name]\nIF trade_company_name_collected = true AND trade_company_name_confirmed = true:\n    LOG(\"Company name already collected - skipping\")\n    [SKIP to Contact Name]\nELSE:\n    # Often mentioned in opening (\"This is Mike from ABC Plumbing\")\n    IF trade_company_name contains text:\n        LOG(\"Company name already extracted from introduction\")\n        you are to say: \"So you're calling from [trade_company_name]?\"\n        WAIT for confirmation\n        SET trade_company_name_confirmed = true\n    ELSE:\n        you are to say: \"Which company are you calling from?\"\n        WAIT for response\n        EXTRACT trade_company_name from response\n        SET trade_company_name_collected = true\n        SET trade_company_name_confirmed = true\n    ENDIF\nENDIF\n\n2. Contact Name\n\n[STATE CHECK: trade_contact_name]\nIF trade_contact_name_collected = true AND trade_contact_name_confirmed = true:\n    LOG(\"Contact name already collected - skipping\")\n    [SKIP to Property Address]\nELSE:\n    # Check if caller_first_name and caller_last_name already captured\n    IF caller_first_name != \"\" AND caller_last_name != \"\":\n        SET trade_contact_name = caller_first_name + \" \" + caller_last_name\n        SET trade_contact_name_collected = true\n        SET trade_contact_name_confirmed = true\n    ELSE:\n        you are to say: \"And who am I speaking with?\"\n        WAIT for response\n        EXTRACT trade_contact_name from response\n        SET trade_contact_name_collected = true\n        SET trade_contact_name_confirmed = true\n    ENDIF\nENDIF\n\n3. Property Address (Which Job?)\n\n[STATE CHECK: trade_property_address]\nIF trade_property_address_collected = true AND trade_property_address_confirmed = true:\n    LOG(\"Property address already collected - skipping\")\n    you are to say: \"So this is regarding the job at [trade_property_address]?\"\n    WAIT for confirmation\n    [SKIP to Job Reference]\nELSE:\n    you are to say: \"Which property is this regarding?\"\n    WAIT for response\n    EXTRACT trade_property_address from response\n    SET trade_property_address_collected = true\n    SET trade_property_address_confirmed = true\nENDIF\n\n4. Job Reference (If Known)\n\n[STATE CHECK: trade_job_reference]\nIF trade_job_reference_collected = true AND trade_job_reference_confirmed = true:\n    LOG(\"Job reference already collected - skipping\")\n    [SKIP to Inquiry Type]\nELSE:\n    you are to say: \"Do you have a job number or reference for this?\"\n    WAIT for response\n    IF response contains job/reference number:\n        EXTRACT trade_job_reference from response\n        SET trade_job_reference_collected = true\n        SET trade_job_reference_confirmed = true\n    ELSE:\n        SET trade_job_reference = \"no_reference\"\n        SET trade_job_reference_collected = true\n        SET trade_job_reference_confirmed = true\n    ENDIF\nENDIF\n\n5. Inquiry Type (What's This Call About?)\n\n[STATE CHECK: trade_inquiry_type]\nIF trade_inquiry_type_collected = true AND trade_inquiry_type_confirmed = true:\n    LOG(\"Inquiry type already collected - skipping\")\n    [SKIP to Inquiry Details]\nELSE:\n    # Analyze what they've said - often mentioned in opening\n    IF trade_quote_request = true:\n        SET trade_inquiry_type = \"quote\"\n        SET trade_inquiry_type_collected = true\n    ELSE IF trade_payment_query = true:\n        SET trade_inquiry_type = \"payment\"\n        SET trade_inquiry_type_collected = true\n    ELSE IF trade_access_issue = true:\n        SET trade_inquiry_type = \"access\"\n        SET trade_inquiry_type_collected = true\n    ELSE IF trade_materials_delay = true:\n        SET trade_inquiry_type = \"materials\"\n        SET trade_inquiry_type_collected = true\n    ELSE IF trade_completion_update = true:\n        SET trade_inquiry_type = \"job_status\"\n        SET trade_inquiry_type_collected = true\n    ELSE:\n        you are to say: \"And what can I help you with regarding this job?\"\n        WAIT for response\n        EXTRACT trade_inquiry_type from response\n        ANALYZE response for:\n            - \"quote\", \"estimate\", \"pricing\" -> \"quote\"\n            - \"payment\", \"invoice\", \"pay\", \"paid\" -> \"payment\"\n            - \"access\", \"keys\", \"get in\", \"entry\" -> \"access\"\n            - \"materials\", \"parts\", \"supplies\" -> \"materials\"\n            - \"finished\", \"completed\", \"done\", \"status\" -> \"job_status\"\n            - Other -> \"other\"\n        SET trade_inquiry_type_collected = true\n    ENDIF\n    \n    you are to say: \"So it's regarding [trade_inquiry_type] - is that right?\"\n    WAIT for confirmation\n    SET trade_inquiry_type_confirmed = true\nENDIF\n\n6. Inquiry Details\n\n[STATE CHECK: trade_inquiry_details]\nIF trade_inquiry_details_collected = true AND trade_inquiry_details_confirmed = true:\n    LOG(\"Inquiry details already collected - skipping\")\n    [SKIP to Confirmation]\nELSE:\n    # Often already mentioned - extract from conversation\n    IF trade_inquiry_details contains text:\n        LOG(\"Details already captured from conversation\")\n        SET trade_inquiry_details_collected = true\n        SET trade_inquiry_details_confirmed = true\n    ELSE:\n        IF trade_inquiry_type = \"payment\":\n            you are to say: \"Are you chasing payment for an invoice, or do you have a query about the amount?\"\n        ELSE IF trade_inquiry_type = \"access\":\n            you are to say: \"When do you need access to the property?\"\n        ELSE:\n            you are to say: \"Can you give me some more details about that?\"\n        ENDIF\n        \n        WAIT for response\n        EXTRACT trade_inquiry_details from response\n        SET trade_inquiry_details_collected = true\n        SET trade_inquiry_details_confirmed = true\n    ENDIF\nENDIF\n\nCONFIRMATION:\n\nIF trade_job_reference != \"no_reference\":\n    you are to say: \"Perfect. So just to confirm - you're [trade_contact_name] from [trade_company_name], calling about the job at [trade_property_address], job reference [trade_job_reference], regarding [trade_inquiry_type]. Is that all correct?\"\nELSE:\n    you are to say: \"Perfect. So just to confirm - you're [trade_contact_name] from [trade_company_name], calling about the job at [trade_property_address], regarding [trade_inquiry_type]. Is that all correct?\"\nENDIF\n\nWAIT for confirmation\n\nContact Details Collection:\n\n[STATE CHECK: caller_phone]\nIF caller_phone_collected = true AND caller_phone_confirmed = true:\n    you are to say: \"And I have [caller_phone] as the best number - is that still current?\"\n    WAIT for confirmation\nELSE:\n    you are to say: \"What's the best number to reach you on?\"\n    WAIT for response\n    EXTRACT caller_phone from response\n    SET caller_phone_collected = true\n    you are to say: \"Perfect, so that's [caller_phone] - is that right?\"\n    WAIT for confirmation\n    SET caller_phone_confirmed = true\nENDIF\n\nROUTING:\n\nIF trade_inquiry_type = \"payment\":\n    you are to say: \"I'll pass this on to our accounts team and they'll give you a call back today.\"\nELSE IF trade_inquiry_type = \"access\":\n    you are to say: \"I'll let the property management team know and they'll call you back within the hour to arrange access.\"\nELSE:\n    you are to say: \"I'll pass this on to the property management team and they'll give you a call back this afternoon.\"\nENDIF\n\nCLOSING:\n\nyou are to say: \"Thanks for calling [trade_contact_name]. We'll be in touch soon. Bye!\"\n\nSET goodbye_delivered = true\n\nEND R-MODULE: TRADESPERSON_INQUIRY",
+  
+  "usage_instructions": {
+    "trigger": "Execute when caller_type = 'tradesperson'",
+    "prerequisites": [
+      "Team availability statement already delivered",
+      "caller_type variable set to 'tradesperson'",
+      "Tradesperson detection patterns matched"
+    ],
+    "execution_flow": [
+      "Opening statement (name-aware)",
+      "Company name collection (may be in introduction)",
+      "Contact name collection (reuse caller name if available)",
+      "Property address collection (state-first)",
+      "Job reference collection (optional)",
+      "Inquiry type identification (with flag analysis)",
+      "Inquiry details gathering (type-specific)",
+      "Confirmation message (job-reference aware)",
+      "Contact details confirmation",
+      "Routing message (type-specific: paymentÃ¢â€ â€™accounts, accessÃ¢â€ â€™urgent, otherÃ¢â€ â€™PM)",
+      "Closing statement (uses contact name)"
+    ],
+    "state_management": "All steps use state-first checking - skip if _collected AND _confirmed both true",
+    "dual_flag_compliance": "100% - all variables have _collected and _confirmed flags",
+    "special_logic": "Routing differs based on inquiry type - payment goes to accounts, access is urgent"
+  },
+  
+  "integration_notes": {
+    "load_method": "LOAD tradesperson_inquiry_module FROM MCP: priya_r_module_tradesperson_inquiry.json",
+    "execute_method": "EXECUTE: tradesperson_inquiry_module.content",
+    "v4_baseline_reference": "Lines 2347-2351 in PRIYA_WORKING_v4_0_MCP.txt",
+    "replaces": "Placeholder at line 2348: EXECUTE: MCP.secondary_call_types.TRADESPERSON_INQUIRY"
+  }
+}
