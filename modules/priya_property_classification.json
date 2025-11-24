@@ -1,0 +1,264 @@
+{
+  "module_name": "property_classification",
+  "version": "1.1",
+  "last_updated": "2025-11-24",
+  "description": "Australian property type classification - MIRROR customer language, STORE normalized",
+  "source": "Created for PRIYA v4.9",
+  
+  "core_principle": {
+    "rule": "ALWAYS use the customer's exact term in dialogue, but STORE as normalized category",
+    "example": {
+      "customer_says": "It's a penthouse",
+      "agent_says": "So that's a penthouse at...",
+      "system_stores": "property_type = apartment"
+    },
+    "variables": {
+      "property_type": "Normalized category (apartment/house/townhouse/rural)",
+      "property_type_spoken": "Exact term customer used (penthouse/villa/federation/etc.)"
+    }
+  },
+  
+  "classification_map": {
+    
+    "apartment": {
+      "description": "Multi-dwelling units with shared building",
+      "stored_as": "apartment",
+      "customer_terms": [
+        {"term": "apartment", "common": true},
+        {"term": "unit", "common": true},
+        {"term": "flat", "common": true},
+        {"term": "penthouse", "common": false},
+        {"term": "sub-penthouse", "common": false},
+        {"term": "subpenthouse", "common": false},
+        {"term": "studio", "common": true},
+        {"term": "studio apartment", "common": true},
+        {"term": "bedsit", "common": false},
+        {"term": "bed-sit", "common": false},
+        {"term": "loft", "common": false},
+        {"term": "loft apartment", "common": false},
+        {"term": "serviced apartment", "common": false},
+        {"term": "granny flat", "common": true},
+        {"term": "secondary dwelling", "common": false},
+        {"term": "maisonette", "common": false},
+        {"term": "walk-up", "common": false},
+        {"term": "high-rise", "common": false},
+        {"term": "low-rise", "common": false},
+        {"term": "retirement unit", "common": false},
+        {"term": "over-55s unit", "common": false}
+      ]
+    },
+    
+    "house": {
+      "description": "Standalone dwelling on its own land",
+      "stored_as": "house",
+      "customer_terms": [
+        {"term": "house", "common": true},
+        {"term": "home", "common": true},
+        {"term": "residence", "common": false},
+        {"term": "dwelling", "common": false},
+        {"term": "family home", "common": true},
+        {"term": "cottage", "common": true},
+        {"term": "bungalow", "common": true},
+        {"term": "homestead", "common": false},
+        {"term": "character home", "common": true},
+        {"term": "federation home", "common": true},
+        {"term": "federation", "common": true},
+        {"term": "victorian", "common": true},
+        {"term": "edwardian", "common": true},
+        {"term": "californian bungalow", "common": true},
+        {"term": "weatherboard", "common": true},
+        {"term": "brick home", "common": true},
+        {"term": "brick house", "common": true},
+        {"term": "rendered home", "common": false},
+        {"term": "double storey", "common": true},
+        {"term": "single storey", "common": true},
+        {"term": "two storey", "common": true},
+        {"term": "split level", "common": true}
+      ]
+    },
+    
+    "townhouse": {
+      "description": "Attached or semi-attached dwelling",
+      "stored_as": "townhouse",
+      "customer_terms": [
+        {"term": "townhouse", "common": true},
+        {"term": "town house", "common": true},
+        {"term": "villa", "common": true},
+        {"term": "villa unit", "common": true},
+        {"term": "semi-detached", "common": true},
+        {"term": "semi detached", "common": true},
+        {"term": "semi", "common": true},
+        {"term": "duplex", "common": true},
+        {"term": "triplex", "common": false},
+        {"term": "terrace", "common": true},
+        {"term": "terrace house", "common": true},
+        {"term": "row house", "common": false},
+        {"term": "attached home", "common": false},
+        {"term": "courtyard home", "common": false},
+        {"term": "dual occupancy", "common": false},
+        {"term": "dual occ", "common": false}
+      ]
+    },
+    
+    "rural": {
+      "description": "Rural and lifestyle properties",
+      "stored_as": "rural",
+      "customer_terms": [
+        {"term": "acreage", "common": true},
+        {"term": "farmhouse", "common": true},
+        {"term": "farm house", "common": true},
+        {"term": "farm", "common": true},
+        {"term": "rural property", "common": true},
+        {"term": "rural", "common": true},
+        {"term": "lifestyle property", "common": true},
+        {"term": "lifestyle block", "common": true},
+        {"term": "hobby farm", "common": true},
+        {"term": "smallholding", "common": false},
+        {"term": "rural residential", "common": false},
+        {"term": "broadacre", "common": false}
+      ]
+    }
+  },
+  
+  "address_inference": {
+    
+    "high_confidence_apartment": {
+      "patterns": [
+        "^\\d+/\\d+",
+        "^\\d+-\\d+/\\d+",
+        "(?i)^unit\\s*\\d+",
+        "(?i)^apt\\s*\\d+",
+        "(?i)^apartment\\s*\\d+",
+        "(?i)^flat\\s*\\d+",
+        "(?i)^level\\s*\\d+",
+        "(?i)^suite\\s*\\d+",
+        "(?i)^loft\\s*\\d+",
+        "(?i)^studio\\s*\\d+",
+        "(?i)^penthouse",
+        "(?i)^ph\\s*\\d+"
+      ],
+      "examples": [
+        "4/45 Smith Street",
+        "Unit 4, 45 Smith Street",
+        "Apt 12, 100 Main Road",
+        "Level 5, 200 High Street",
+        "Penthouse 1, 50 Beach Road"
+      ],
+      "inferred_type": "apartment",
+      "confirmation_question": "And that's a unit, is it?"
+    },
+    
+    "high_confidence_house": {
+      "patterns": [
+        "^\\d+\\s+[A-Za-z](?!.*(?:/|unit|apt|apartment|flat|level|suite|lot))"
+      ],
+      "examples": [
+        "45 Smith Street",
+        "123 Main Road",
+        "7 Beach Avenue"
+      ],
+      "inferred_type": "house",
+      "confirmation_question": "And that's a house, is it?"
+    },
+    
+    "low_confidence_ask": {
+      "patterns": [
+        "^\\d+[A-Za-z]\\s+"
+      ],
+      "examples": [
+        "45A Smith Street",
+        "12B Main Road"
+      ],
+      "inferred_type": null,
+      "question": "And what type of property is it - a house, townhouse, or unit?"
+    },
+    
+    "high_confidence_rural": {
+      "patterns": [
+        "(?i)^lot\\s*\\d+",
+        "(?i)^rmb\\s*\\d+",
+        "(?i)^rsd\\s*\\d+",
+        "(?i)^section\\s*\\d+"
+      ],
+      "examples": [
+        "Lot 45 Smith Road",
+        "RMB 123 Rural Highway"
+      ],
+      "inferred_type": "rural",
+      "confirmation_question": "And that's a rural property, is it?"
+    }
+  },
+  
+  "implementation_protocol": {
+    
+    "step_1_extract": {
+      "action": "Extract property_type_spoken from customer response",
+      "example": "Customer says 'It's a federation home' → property_type_spoken = 'federation home'"
+    },
+    
+    "step_2_normalize": {
+      "action": "Look up property_type_spoken in classification_map to get stored_as value",
+      "example": "'federation home' → stored_as = 'house'"
+    },
+    
+    "step_3_store": {
+      "action": "SET property_type = normalized value",
+      "action2": "SET property_type_spoken = customer's exact term",
+      "example": "property_type = 'house', property_type_spoken = 'federation home'"
+    },
+    
+    "step_4_speak": {
+      "action": "ALWAYS use property_type_spoken in dialogue with customer",
+      "example": "SAY: 'So that's a federation home at 45 Oceanview Avenue...'"
+    },
+    
+    "step_5_recap": {
+      "action": "Use property_type_spoken in recap/confirmation",
+      "example": "SAY: 'So you're looking for a federation home with 4 bedrooms...'"
+    }
+  },
+  
+  "dialogue_examples": {
+    
+    "example_1_penthouse": {
+      "customer": "It's a penthouse",
+      "agent_says": "So that's a penthouse at 45 Oceanview Avenue, Dover Heights.",
+      "stored": {"property_type": "apartment", "property_type_spoken": "penthouse"}
+    },
+    
+    "example_2_villa": {
+      "customer": "We're in a villa",
+      "agent_says": "Right, so that's a villa at 12 Smith Street.",
+      "stored": {"property_type": "townhouse", "property_type_spoken": "villa"}
+    },
+    
+    "example_3_federation": {
+      "customer": "It's a federation, built in 1910",
+      "agent_says": "Lovely, so that's a federation at 88 High Street.",
+      "stored": {"property_type": "house", "property_type_spoken": "federation"}
+    },
+    
+    "example_4_semi": {
+      "customer": "It's a semi",
+      "agent_says": "Right, so that's a semi at 45A Beach Road.",
+      "stored": {"property_type": "townhouse", "property_type_spoken": "semi"}
+    },
+    
+    "example_5_buyer_recap": {
+      "context": "Buyer looking for a studio",
+      "agent_says": "So you're looking for a studio with parking in Mawson Lakes...",
+      "stored": {"buyer_property_type": "apartment", "buyer_property_type_spoken": "studio"}
+    }
+  },
+  
+  "metadata": {
+    "total_apartment_terms": 21,
+    "total_house_terms": 22,
+    "total_townhouse_terms": 16,
+    "total_rural_terms": 12,
+    "total_terms": 71,
+    "northern_adelaide_common": ["house", "unit", "townhouse", "villa", "semi"],
+    "created_for": "PRIYA v4.9",
+    "principle": "Mirror customer language, store normalized"
+  }
+}
