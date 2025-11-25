@@ -1,0 +1,108 @@
+{
+  "version": "1.0",
+  "client": "westside",
+  "company_name": "Westside Real Estate",
+  "market": "Western Melbourne",
+  "state": "VIC",
+  
+  "suburbs": [
+    "St Albans",
+    "Kings Park",
+    "Taylors Hill",
+    "Albanvale",
+    "Deer Park",
+    "Deer Park North",
+    "Fraser Rise",
+    "Burnside",
+    "Burnside Heights",
+    "Sydenham",
+    "Hillside",
+    "Delahey",
+    "Cairnlea",
+    "Rockbank",
+    "Calder Park",
+    "Keilor",
+    "Keilor Downs",
+    "Keilor East",
+    "Keilor Park",
+    "Keilor Lodge",
+    "Taylors Lakes",
+    "Watergardens",
+    "Taylor's Hill"
+  ],
+  
+  "neighboring_suburbs": [
+    "Sunshine",
+    "Sunshine West",
+    "Sunshine North",
+    "Albion",
+    "Braybrook",
+    "Caroline Springs",
+    "Melton",
+    "Melton South",
+    "Melton West",
+    "Tullamarine",
+    "Airport West",
+    "Niddrie",
+    "Avondale Heights",
+    "Maribyrnong"
+  ],
+  
+  "market_description": "Western Melbourne suburbs including St Albans, Kings Park, Taylors Hill, and surrounding areas",
+  
+  "service_areas": {
+    "primary": [
+      "St Albans",
+      "Kings Park",
+      "Taylors Hill",
+      "Albanvale"
+    ],
+    "secondary": [
+      "Deer Park",
+      "Fraser Rise",
+      "Burnside",
+      "Sydenham",
+      "Hillside",
+      "Delahey",
+      "Cairnlea",
+      "Rockbank",
+      "Keilor Downs",
+      "Taylors Lakes"
+    ]
+  },
+  
+  "local_landmarks": [
+    "Watergardens Shopping Centre",
+    "St Albans Leisure Centre",
+    "St Albans Station",
+    "Kings Park Shopping Centre",
+    "Keilor Downs Shopping Centre",
+    "Overnewton Castle",
+    "Brimbank Shopping Centre",
+    "Sunshine Marketplace"
+  ],
+  
+  "street_suffixes": [
+    "Street",
+    "St",
+    "Road",
+    "Rd",
+    "Avenue",
+    "Ave",
+    "Drive",
+    "Dr",
+    "Court",
+    "Ct",
+    "Place",
+    "Pl",
+    "Crescent",
+    "Cres",
+    "Circuit",
+    "Lane",
+    "Way",
+    "Grove",
+    "Boulevard",
+    "Parade",
+    "Close"
+  ]
+}

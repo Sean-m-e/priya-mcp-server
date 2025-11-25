@@ -1,0 +1,68 @@
+{
+  "company_name": "MK Group Of Properties",
+  "phone": "TBD",
+  "address": "TBD Adelaide SA",
+  "email": "info@mkgroup.com.au",
+  "website": "mkgroup.com.au",
+  "abn": "TBD",
+  
+  "team_members": [
+    {
+      "name": "Khushi",
+      "role": "Principal Agent",
+      "phone": "TBD",
+      "email": "khushi@mkgroup.com.au",
+      "specialties": ["sales", "property_management", "buyer_advocacy"]
+    },
+    {
+      "name": "Misal",
+      "role": "Sales Agent",
+      "phone": "TBD",
+      "email": "misal@mkgroup.com.au",
+      "specialties": ["sales", "appraisals"]
+    }
+  ],
+  
+  "office_hours": {
+    "monday_friday": "9:00 AM - 5:00 PM",
+    "saturday": "9:00 AM - 2:00 PM",
+    "sunday": "Closed"
+  },
+  
+  "services": [
+    "Residential Sales",
+    "Property Management",
+    "Rental Property Leasing",
+    "Property Appraisals",
+    "Buyer Advocacy"
+  ],
+  
+  "service_areas": {
+    "primary": "Northern Adelaide suburbs including Salisbury, Elizabeth, Mawson Lakes, and surrounding areas",
+    "coverage": "42 suburbs across Northern Adelaide"
+  },
+  
+  "about": "MK Group Of Properties specializes in Northern Adelaide real estate, providing comprehensive property services including sales, rentals, and property management.",
+  
+  "ai_disclosure_protocol": {
+    "response": "Yeah, I'm Khushi's AI assistant. My role is just to get the basic details sorted before the team takes over, which speeds things up for you. I can have them call you back if you'd prefer or should we continue?",
+    "continuation_options": {
+      "continue": "Brilliant! Let's get back to it.",
+      "callback": "No problem at all. I'll organize for the team to give you a call and what's the best time to reach you?",
+      "unclear": "Sorry, I didn't quite catch that - would you like to continue or prefer a callback?"
+    }
+  },
+  
+  "phone_confirmation_protocol": {
+    "australian_mobile_format": "04XX XXX XXX",
+    "landline_format": "08 XXXX XXXX",
+    "repeat_back": "Just to confirm, that's {formatted_phone} - is that right?"
+  },
+  
+  "call_closing_templates": {
+    "standard": "Perfect! I'll get all this over to {agent_name} and they'll give you a call within the next couple of hours. Thanks for getting in touch with MK Group!",
+    "urgent_maintenance": "Okay, I'll mark this as urgent and get someone out to you as soon as possible. You should hear from our maintenance team within the hour.",
+    "rental_inquiry": "Great! I'll send those details through to {agent_name} and they'll be in touch shortly with available properties. Thanks for calling MK Group!",
+    "selling_appraisal": "Perfect! I'll have {agent_name} give you a call to arrange a time for the appraisal. They'll be in touch within the next few hours."
+  }
+}
