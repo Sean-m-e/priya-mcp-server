@@ -1,0 +1,100 @@
+{
+  "version": "1.0",
+  "client": "westside",
+  "last_updated": "2025-11-25",
+  
+  "company_name": "Westside Real Estate",
+  "phone": "03 9364 1188",
+  "address": "1A Alfrieda Street, St Albans VIC 3021",
+  "email": "info@westsidere.com.au",
+  "website": "westsiderealestate.com.au",
+  
+  "team_members": [
+    {
+      "name": "Surinder Sarain",
+      "title": "CEO/Real Estate",
+      "email": "surinder@westsidere.com.au",
+      "phone": "03 9364 1188",
+      "specialties": ["Sales", "Commercial Real Estate"]
+    }
+  ],
+  
+  "office_hours": {
+    "monday_friday": "9:00 AM - 5:00 PM",
+    "saturday": "9:00 AM - 2:00 PM",
+    "sunday": "Closed",
+    "public_holidays": "Closed"
+  },
+  
+  "service_areas": {
+    "primary": ["St Albans", "Kings Park", "Taylors Hill", "Albanvale"],
+    "secondary": ["Deer Park", "Fraser Rise", "Burnside", "Sydenham", "Hillside", "Delahey", "Cairnlea", "Rockbank"],
+    "description": "Western Melbourne suburbs"
+  },
+  
+  "services": {
+    "sales": {
+      "residential": true,
+      "commercial": true,
+      "land": true,
+      "auction": true,
+      "private_treaty": true
+    },
+    "rentals": {
+      "property_management": true,
+      "tenant_placement": true,
+      "lease_renewals": true,
+      "maintenance_coordination": true
+    },
+    "appraisals": {
+      "market_appraisals": true,
+      "pre_purchase_inspections": false,
+      "property_styling": true
+    }
+  },
+  
+  "ai_disclosure": {
+    "question": "Are You a Real Person?",
+    "response": "I'm Priya, an AI assistant for Westside Real Estate. I'm here to help collect your information and get you connected with the right person on the team. Is that okay, or would you prefer I just take a message and get someone to call you back?",
+    "options": {
+      "continue": "Great! Let's continue...",
+      "callback": "No problem at all. Let me just grab your details and I'll get someone from the team to give you a call.",
+      "decline": "I completely understand. Let me take your name and number, and I'll get someone from the team to give you a call."
+    }
+  },
+  
+  "phone_confirmation_protocol": {
+    "instruction": "Check caller_phone_confirmed status before asking",
+    "skip_if_confirmed": true,
+    "question": "And is the number you've called on the best one to reach you?",
+    "applies_to": ["email_collection", "appraisal_scheduling", "maintenance_logging", "emergency_escalation", "call_closing"]
+  },
+  
+  "objection_handling": {
+    "already_told_you": {
+      "step_1": "Identify what information they're referring to",
+      "step_2": "Check the relevant state variable",
+      "step_3_if_populated": "You're absolutely right, I apologize. [Use the information naturally]",
+      "step_3_if_null": "I don't believe I have that information yet - could you provide it now?",
+      "step_3_if_unclear": "I want to make sure I have the right information - could you confirm what you're referring to?"
+    }
+  },
+  
+  "call_closing": {
+    "standard": "Thanks for your call today {{caller_first_name}}, you'll be hearing from one of the team today and you have a fantastic rest of your day! Goodbye.",
+    "emergency_maintenance": "Thanks for your call today {{caller_first_name}}, the team will be in touch soon and you have a fantastic rest of your day! Goodbye.",
+    "rental_inquiry": "Thanks for your call today {{caller_first_name}}, you'll be hearing from the team when suitable properties become available and you have a fantastic rest of your day! Goodbye.",
+    "action_after_goodbye": "IMMEDIATELY disconnect the call. Do not say anything else. Do not respond if caller continues speaking."
+  },
+  
+  "response_expectations": {
+    "urgent": "The team will contact you as soon as possible, usually within a few hours.",
+    "during_hours": "The team will give you a call back today.",
+    "after_hours": "The team will give you a call back tomorrow."
+  },
+  
+  "success_metrics": {
+    "required_fields": ["caller_name", "purpose_of_call", "relevant_information", "contact_details"],
+    "completion_indicators": ["appropriate_module_completed", "next_steps_communicated", "caller_feels_helped"]
+  }
+}
