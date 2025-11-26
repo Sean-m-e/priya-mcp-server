@@ -1,0 +1,148 @@
+{
+  "version": "1.0",
+  "client": "yourlocalagency",
+  "company_name": "Your Local Agency",
+  "market": "Sydney Eastern Suburbs",
+  "state": "NSW",
+  
+  "suburbs": [
+    "Bondi",
+    "Bondi Beach",
+    "Bondi Junction",
+    "North Bondi",
+    "Bronte",
+    "Tamarama",
+    "Clovelly",
+    "Coogee",
+    "South Coogee",
+    "Randwick",
+    "Kensington",
+    "Kingsford",
+    "Maroubra",
+    "Maroubra Junction",
+    "South Maroubra",
+    "Malabar",
+    "La Perouse",
+    "Little Bay",
+    "Chifley",
+    "Eastgardens",
+    "Pagewood",
+    "Hillsdale",
+    "Daceyville",
+    "Rosebery",
+    "Waterloo",
+    "Zetland",
+    "Moore Park",
+    "Centennial Park",
+    "Queens Park",
+    "Waverley",
+    "Dover Heights",
+    "Rose Bay",
+    "Vaucluse",
+    "Watsons Bay",
+    "Point Piper",
+    "Double Bay",
+    "Darling Point",
+    "Edgecliff",
+    "Woollahra",
+    "Paddington",
+    "Bellevue Hill"
+  ],
+  
+  "neighboring_suburbs": [
+    "Surry Hills",
+    "Darlinghurst",
+    "Potts Point",
+    "Elizabeth Bay",
+    "Rushcutters Bay",
+    "Alexandria",
+    "Mascot",
+    "Botany",
+    "Sydney CBD",
+    "Redfern"
+  ],
+  
+  "market_description": "Sydney Eastern Suburbs including Bondi, Bronte, Coogee, and surrounding beachside and inner-east areas",
+  
+  "service_areas": {
+    "primary": [
+      "Bondi",
+      "Bondi Beach",
+      "Bondi Junction",
+      "North Bondi",
+      "Bronte",
+      "Tamarama",
+      "Clovelly",
+      "Waverley",
+      "Queens Park",
+      "Dover Heights"
+    ],
+    "secondary": [
+      "Coogee",
+      "Randwick",
+      "Rose Bay",
+      "Double Bay",
+      "Woollahra",
+      "Paddington",
+      "Bellevue Hill",
+      "Vaucluse"
+    ]
+  },
+  
+  "local_landmarks": [
+    "Bondi Beach",
+    "Bondi Icebergs",
+    "Bronte Beach",
+    "Coogee Beach",
+    "Tamarama Beach",
+    "Bondi Junction Westfield",
+    "Centennial Park",
+    "Royal Randwick Racecourse",
+    "UNSW Sydney",
+    "Bondi to Coogee Coastal Walk"
+  ],
+  
+  "street_suffixes": [
+    "Street",
+    "St",
+    "Road",
+    "Rd",
+    "Avenue",
+    "Ave",
+    "Drive",
+    "Dr",
+    "Court",
+    "Ct",
+    "Place",
+    "Pl",
+    "Crescent",
+    "Cres",
+    "Circuit",
+    "Lane",
+    "Way",
+    "Grove",
+    "Parade",
+    "Pde",
+    "Terrace",
+    "Tce"
+  ],
+  
+  "abbreviation_expansions": {
+    "Ave": "Avenue",
+    "St": "Street",
+    "Rd": "Road",
+    "Dr": "Drive",
+    "Pde": "Parade",
+    "Pl": "Place",
+    "Ct": "Court",
+    "Cres": "Crescent",
+    "Tce": "Terrace"
+  },
+  
+  "metadata": {
+    "last_updated": "2025-11-26",
+    "total_suburbs": 41,
+    "total_neighboring": 10,
+    "type": "client_locations"
+  }
+}
